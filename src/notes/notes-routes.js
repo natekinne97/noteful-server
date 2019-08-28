@@ -14,15 +14,7 @@ const serializenotes = notes => ({
 });
 
 
-function checkField(field, res){
-    if(field == undefined){
-        res.status(400).json({
-            error: {
-                message: `${field} is undefined`
-            }
-        })
-    }
-}
+
 
 
 
@@ -59,23 +51,22 @@ notesRouter.route('/notes/:notes_id')
 notesRouter.route('/notes')
     .post(jsonParser, (req, res, next) => {
         const { name, text, folder } = req.body;
+        const newNote = { name, text, folder }
         
-        // check if field is empty
-        checkField(name, res);
-        checkField(text, res);
-        checkField(folder, res);
-       
-        console.log(folder);
-        console.log(typeof folder);
+        for(field in newNote){
+            if(!newNote[field]){
+               return res.status(400).json({
+                    error: {
+                        message: `Must include ${field}`
+                    }
+                })
+            }
+        }
 
         if(typeof folder == 'string'){
             Number(folder);
         }
-        console.log(folder);
-        console.log(typeof folder);
-
-        const newNote = {name, text, folder}
-        console.log(newNote);
+       
         notesService.insertnotes(
             req.app.get('db'),
            newNote

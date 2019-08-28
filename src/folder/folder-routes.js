@@ -43,8 +43,7 @@ folderRouter.route('/folders/:folder_id')
 folderRouter.route('/folders')
         .post(jsonParser, (req, res, next)=>{
             const {foldername} = req.body;
-            console.log(req.body);
-            console.log(foldername);
+           
             // error 
             if(foldername == undefined){
                 console.log(foldername);
