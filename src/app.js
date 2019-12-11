@@ -19,6 +19,8 @@ app.use(morgan(morganOption))
 app.use(helmet())
 //CORS middleware
 app.use(cors());
+
+// app.use(corsOptions);
 app.options('*', cors());
 
 
