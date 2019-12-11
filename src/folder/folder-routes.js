@@ -60,8 +60,8 @@ folderRouter.route('/folders')
                 )
                 .then(folder =>{
                    
-                    res.status(200)
-                       .json(folder);
+                   return res.status(200)
+                       .json(folder).end();
                 }).catch(next);
         });
         
