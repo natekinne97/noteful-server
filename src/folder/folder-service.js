@@ -7,6 +7,7 @@ const folderService = {
             .into('folders')
             .returning('*')
             .then(rows=>{
+                console.log(rows[0], 'inserted folder')
                 return rows[0]
             });
     },

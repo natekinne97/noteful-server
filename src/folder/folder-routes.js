@@ -15,7 +15,7 @@ folderRouter.route('/folders')
         .get((req, res, next)=>{
             folderService.getAll(req.app.get('db'))
                     .then(folders=>{
-                        console.log(folders.map(serializeFolder))
+                       
                         res.json(folders.map(serializeFolder));
                     })
                     .catch(next);
@@ -46,7 +46,7 @@ folderRouter.route('/folders')
            
             // error 
             if(foldername == undefined){
-                console.log(foldername);
+              
                 return res.status(400).json({
                     error: {
                         message: "Must contain a foldername"
@@ -59,10 +59,9 @@ folderRouter.route('/folders')
                 {foldername}
                 )
                 .then(folder =>{
-                    res.status(204)
-                        // redirect to folder page
-                        .location(`/folders/${folder.id}`)
-                        .json(folder);
+                   
+                    res.status(200)
+                       .json(folder);
                 }).catch(next);
         });
         

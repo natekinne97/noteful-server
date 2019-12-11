@@ -16,7 +16,7 @@ const notesService = {
             .where('id', id)
             .first()
     },
-    deletenotes(db, id) {
+    deleteNotes(db, id) {
         return db('notes')
             .where('id', id)
             .delete();

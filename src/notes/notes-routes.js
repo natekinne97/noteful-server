@@ -8,21 +8,17 @@ const jsonParser = express.json()
 const serializenotes = notes => ({
     id: notes.id,
     name: xss(notes.name),
-    text: xss(notes.text),
-    folder: notes.folder,
-    date_created: notes.date_created
+    content: xss(notes.text),
+    folderId: notes.folder,
+    modified: notes.date_created
 });
-
-
-
-
-
 
 // get all notess
 notesRouter.route('/notes')
     .get((req, res, next) => {
         notesService.getAll(req.app.get('db'))
             .then(notes => {
+                
                 res.json(notes.map(serializenotes));
             })
             .catch(next);
@@ -52,6 +48,7 @@ notesRouter.route('/notes')
     .post(jsonParser, (req, res, next) => {
         const { name, text, folder } = req.body;
         const newNote = { name, text, folder }
+        console.log('inserting new note');
         
         for(field in newNote){
             if(!newNote[field]){
@@ -66,15 +63,19 @@ notesRouter.route('/notes')
         if(typeof folder == 'string'){
             Number(folder);
         }
+        console.log(newNote, 'newNote');
        
         notesService.insertnotes(
             req.app.get('db'),
            newNote
         )
             .then(notes => {
-                res.status(204)
+                console.log('note inserted')
+                console.log(notes, 'notes');
+                console.log(serializenotes(notes), 'serialized notes');
+                res.status(200)
                     // redirect to notes page
-                    .location(`/notes/${notes.id}`)
+                    // .location(`/notes/${notes.id}`)
                     .json(serializenotes(notes));
             })
     });
@@ -103,18 +104,26 @@ notesRouter.route('/notes/:notes_id')
 notesRouter.route('/notes/:notes_id')
     .delete((req, res, next) => {
         const db = req.app.get('db');
-        notesService.deletenotes(
+        const noteId = req.params.notes_id;
+        console.log(noteId);
+        console.log('delete called')
+        notesService.deleteNotes(
             db,
-            req.params.notes_id
-        ).then(notes => {
-            if (!notes) {
-                res.status(404).json({
-                    error: {
-                        message: "notes doesn't exist"
-                    }
-                })
-                res.status(200);
+            Number(noteId)
+        )
+        .then(notes=>{
+            if(!notes){
+                console.log(notes, 'notes after if');
+                return res.status(400).json({
+                    error: "note doesnt exist"
+                });
             }
-        }).catch(next);
+            console.log('success being sent');
+            return res.status(200).end();
+        })
+        .catch(err=> {
+            console.log('an error occurred')
+            console.log(err, 'error')});
+        console.log('nothing happened');
     });
 module.exports = notesRouter;
