@@ -17,9 +17,10 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption))
 app.use(helmet())
-app.use(
-    cors({ credentials: true, origin: true })
-)
+//CORS middleware
+app.use(cors());
+app.options('*', cors());
+
 
 // use endpoints
 app.use(folderRouter);
